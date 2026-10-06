@@ -1,78 +1,106 @@
+
+DROP DATABASE GTonline;
+
 CREATE DATABASE GTonline;
 USE GTonline;
 
 -- =========================================
 -- 1. USERS
 -- =========================================
-CREATE TABLE Users(Email VARCHAR(100) PRIMARY KEY,
+CREATE TABLE Users(
+	Email VARCHAR(100) PRIMARY KEY,
 	Password VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Name (First_name VARCHAR(100), 
-	Last_name VARCHAR(100), 
+CREATE TABLE User_Name (
+	FirstName VARCHAR(100), 
+	LastName VARCHAR(100), 
 	Email VARCHAR(100) PRIMARY KEY,
     
 	FOREIGN KEY (Email) 
 		REFERENCES Users(Email)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
+
 -- =========================================
 -- 2. ADMIN USER
 -- =========================================
-CREATE TABLE AdminUser(Email VARCHAR(100) PRIMARY KEY,
-	Last_login DATETIME,
+CREATE TABLE Admin_User(
+	Email VARCHAR(100) PRIMARY KEY,
+	LastLogin DATETIME,
     
 	FOREIGN KEY(Email)
-		REFERENCES Users(Email) ON DELETE CASCADE
+		REFERENCES Users(Email) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
 );
+
 -- =========================================
 -- 3. REGULAR USER
 -- =========================================
-CREATE TABLE RegularUser(Email VARCHAR(100) PRIMARY KEY,
+CREATE TABLE Regular_User(
+	Email VARCHAR(100) PRIMARY KEY,
 	Sex ENUM('M','F'),
-	Birth_Date DATE,
-	Current_City VARCHAR(100),
+	BirthDate DATE,
+	CurrentCity VARCHAR(100),
 	HomeTown VARCHAR(100),
     
 	FOREIGN KEY(Email)
-		REFERENCES Users(Email) ON DELETE CASCADE
+		REFERENCES Users(Email) 
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
 );
+
 -- =========================================
 -- 4. REGULAR USER INTEREST
 -- =========================================
-CREATE TABLE RegularUserInterests(Email VARCHAR(100),
+CREATE TABLE Regular_User_Interests(
+	Email VARCHAR(100),
 	Interest VARCHAR(100),
 	PRIMARY KEY (Email, Interest),
     
 	FOREIGN KEY (email) 
-		REFERENCES RegularUser(email) ON DELETE CASCADE
+		REFERENCES Regular_User(email) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
+
 -- =========================================
 -- 5. EMPLOYER
 -- =========================================
 CREATE TABLE Employer(
-	Employer_Name VARCHAR(100) PRIMARY KEY
+	EmployerName VARCHAR(100) PRIMARY KEY
 );
+
 -- =========================================
 -- 6. USER EMPLOYER
 -- =========================================
-CREATE TABLE UsreEmployee(Job_Title VARCHAR(100) NOT NULL,
-	Email VARCHAR(100) NOT NULL,
-	Employer_Name VARCHAR(100) NOT NULL,
+CREATE TABLE User_Employer(
+	EmployerName VARCHAR(100),
+	Email VARCHAR(100),
+	JobTitle VARCHAR(100),
                             
-    PRIMARY KEY(Job_Title,Email,Employer_Name),
+    PRIMARY KEY(JobTitle,Email,EmployerName),
                             
-    FOREIGN KEY (email) 
-		REFERENCES RegularUser(email) ON DELETE CASCADE,
+    FOREIGN KEY (Email) 
+		REFERENCES Regular_User(Email) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
                                         
-	FOREIGN KEY (Employer_Name) 
-		REFERENCES Employer(Employer_Name) ON DELETE CASCADE
+	FOREIGN KEY (EmployerName) 
+		REFERENCES Employer(EmployerName) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
+
 -- =========================================
 -- 7. SCHOOL TYPE
 -- =========================================
-CREATE TABLE SchoolType (
+CREATE TABLE School_Type (
     TypeName VARCHAR(100) PRIMARY KEY
 );
+
 -- =========================================
 -- 8. SCHOOL
 -- =========================================
@@ -81,12 +109,15 @@ CREATE TABLE School (
     TypeName VARCHAR(100) NOT NULL,
 
     FOREIGN KEY (TypeName)
-        REFERENCES SchoolType(TypeName) ON DELETE CASCADE
+        REFERENCES School_Type(TypeName) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
+
 -- =========================================
 -- 9. USER SCHOOL
 -- =========================================
-CREATE TABLE UserSchool (
+CREATE TABLE User_School (
     Email VARCHAR(100) NOT NULL,
     SchoolName VARCHAR(255) NOT NULL,
     YearGraduated YEAR NOT NULL,
@@ -94,11 +125,16 @@ CREATE TABLE UserSchool (
     PRIMARY KEY (Email, SchoolName, YearGraduated),
 
     FOREIGN KEY (Email)
-        REFERENCES RegularUser(Email) ON DELETE CASCADE,
+        REFERENCES Regular_User(Email) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
 
     FOREIGN KEY (SchoolName)
-        REFERENCES School(SchoolName)ON DELETE CASCADE
+        REFERENCES School(SchoolName)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
+
 -- =========================================
 -- 10. FRIENDSHIP
 -- =========================================
@@ -107,10 +143,14 @@ CREATE TABLE Friendship (
     AccepterEmail VARCHAR(100),
     
     FOREIGN KEY (RequesterEmail)
-        REFERENCES RegularUser(Email) ON DELETE CASCADE,
+        REFERENCES Regular_User(Email) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
 
     FOREIGN KEY (AccepterEmail)
-        REFERENCES RegularUser(Email) ON DELETE CASCADE
+        REFERENCES Regular_User(Email) 
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 
